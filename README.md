@@ -189,10 +189,4 @@ Project Link: [https://github.com/AzevedoJason-FS/spotify-template/tree/main](ht
 [MongoDB]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
 [Mongo-url]: https://www.mongodb.com/cloud/atlas/lp/try4?utm_source=google&utm_campaign=gs_americas_united_states_search_core_brand_atlas_desktop&utm_term=mongodb&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=12212624338&adgroup=115749704103
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-<<<<<<< HEAD
 [React-url]: https://reactjs.org/
-=======
-[React-url]: https://reactjs.org/
-[Node.js]: https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=node&logoColor=61DAFB
-[Node-url]: https://nodejs.org/en/
->>>>>>> 3ab9b03760f2c7a87d4aa2a3d7e891fdca86de23
