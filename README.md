@@ -188,5 +188,5 @@ Project Link: [https://github.com/AzevedoJason-FS/spotify-template/tree/main](ht
 [product-screenshot]: images/screenshot.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Node.js]: https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=node&logoColor=61DAFB
-[React-url]: https://reactjs.org/
+[Node.js]: https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=nodejs&logoColor=61DAFB
+[Node-url]: https://nodejs.org/en/
