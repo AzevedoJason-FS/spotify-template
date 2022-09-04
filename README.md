@@ -39,41 +39,30 @@ This section shows the major frameworks/libraries used to complete this project.
 
 
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-To get started
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-
 ### Prerequisites
 
-Node v16
+Make sure to have Node v16
 
-### Installation
+### Getting Started
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/AzevedoJason-FS/spotify-template.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-4. cd server and run the server
+3. cd server and run the server
    ```sh
    cd server
    ```
    ```sh
    npm run dev
    ```
-5. create seperate terminal to run React App
+4. create seperate terminal to run React App
    ```sh
    cd spotify-app
    ```
