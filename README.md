@@ -105,7 +105,7 @@ Use the `BLANK_README.md` to get started.
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * [![React][React.js]][React-url]
-* [![NodeJs][Node.js]][Nodejs-url]
+* [![MongoDB][Mongodb.com]][Mongo-url]
 * [![Svelte][Svelte.dev]][Svelte-url]
 * [![Laravel][Laravel.com]][Laravel-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
@@ -186,7 +186,7 @@ Project Link: [https://github.com/AzevedoJason-FS/spotify-template/tree/main](ht
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
+[MongoDB]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
+[Mongo-url]: https://www.mongodb.com/cloud/atlas/lp/try4?utm_source=google&utm_campaign=gs_americas_united_states_search_core_brand_atlas_desktop&utm_term=mongodb&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=12212624338&adgroup=115749704103
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[Node.js]: https://img.shields.io/badge/Node-20232A?style=for-the-badge&logo=nodejs&logoColor=61DAFB
-[Node-url]: https://nodejs.org/en/
