@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const loginRoutes = require("./routes/login");
+const spotifyCtrl = require("./controllers/spotify");
+const mongoose = require('mongoose');
 
 //Parsing middleware
 app.use(express.urlencoded({
@@ -17,7 +18,8 @@ res.status(201).json({
 })
 });
 
-app.use("/login", loginRoutes);
+app.use("/login", spotifyCtrl.login);
+app.use("/search", spotifyCtrl.search);
 
 //middleware to handle CORS Policy
 app.use((req, res, next) => {
@@ -53,5 +55,15 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`)
 })
+
+// Connect to MongoDB
+mongoose.connect(process.env.DATABASE_URL, (err) => {
+    if(err){
+        console.error("Error: ", err.message);
+    }
+    else{
+        console.log("MongoDB Connection Successful")
+    }
+});
 
 
