@@ -1,7 +1,27 @@
 import Header from '../components/Header';
 import * as React from "react";
+import axios from 'axios';
+import { useSearchParams } from "react-router-dom";
 
 const Home = () => {
+  const [searchParams] = useSearchParams();
+
+  React.useEffect(() => {
+  let params = searchParams.get('code')
+
+  const baseURL = "/search";
+  
+    axios.get(baseURL,{
+      params:{ code:params}
+    }).then((response) => {
+     console.log(response.data)
+    }).catch(err => {
+        if (err.response && err.response.status === 406){
+            // console.clear()
+        }
+      })
+}, []);
+
   return (
     <div>
       <Header />
