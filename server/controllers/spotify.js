@@ -1,5 +1,5 @@
 const express = require('express');
-const queryString = require("node:querystring");
+const querystring = require('querystring');
 const spotify = express.Router();
 const randomstring = require("randomstring");
 require('dotenv').config();
@@ -11,49 +11,34 @@ const login = async (req, res) => {
   res.redirect(`${process.env.AUTH_ENDPOINT}?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=${process.env.RESPONSE_TYPE}&state=${state}&scope=${scope}`)
 };
 
-const search = async (req, res) => {
-    const code = req.query.code;
-    // const authOptions = {
-    //   url: 'https://accounts.spotify.com/api/token',
-    //   form: {
-    //     code: code,
-    //     redirect_uri: process.env.REDIRECT_URI,
-    //     grant_type: 'authorization_code'
-    //   },
-    //   headers: {
-    //     'Authorization': 'Basic ' + (Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'))
-    //   },
-    //   json: true
-    // }
+const callback = async (req, res) => {
 
-    const spotifyResponse = await axios.post(
-      "https://accounts.spotify.com/api/token",
-      queryString.stringify({
-        grant_type: "authorization_code",
-        code: code,
-        redirect_uri: process.env.REDIRECT_URI,
-      }),
-      {
-        headers: {
-          'Authorization': 'Basic ' + (Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')),
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-  
-  console.log(spotifyResponse.data);
-
-  
-};
-
+  const code = req.query.code || null;
+  axios({
+    method: 'post',
+    url: 'https://accounts.spotify.com/api/token',
+    data: querystring.stringify({
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: process.env.REDIRECT_URI
+    }),
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+    },
+  })
+  .then(response => {
+    if (response.status === 200) {
+      res.send(`<pre>${JSON.stringify(response.data, null, 2)}</pre>`);
+    } else {
+      res.send(response);
+    }
+  })
+  .catch(error => {
+    res.send(error);
+  });
+  }
 
 module.exports = {
-	search, login
+ login, callback
 }
-
-
-
-
-
-
-

@@ -11,26 +11,22 @@ app.use(express.urlencoded({
 //Middleware request all JSON
 app.use(express.json());
 
-app.get("/", (req, res, next) => {
-res.status(201).json({
-    message: "Service Up",
-    method: req.method
-})
-});
-
 app.use("/login", spotifyCtrl.login);
-app.use("/search", spotifyCtrl.search);
+app.use("/callback", spotifyCtrl.callback);
 
 //middleware to handle CORS Policy
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
-    if(req.method === "OPTIONS"){
-        res.header("Access-Control-Allow-Methods","POST, PUT, GET, PATCH, DELETE");
-    };
-    next();
+    if(req.method == "OPTIONS"){
+        res.set('Access-Control-Max-Age');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.status(204).send('');
+    }
 });
+
+
 
 //Middleware modules for Error Handling
 app.use((req, res, next) => {
