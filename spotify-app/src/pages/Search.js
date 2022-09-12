@@ -1,25 +1,27 @@
 import Header from '../components/Header';
 import * as React from "react";
 import axios from 'axios';
-import { useSearchParams } from "react-router-dom";
+import { useEffect } from 'react';
 
 const Home = () => {
-  const [searchParams] = useSearchParams();
 
   React.useEffect(() => {
-  let params = searchParams.get('code')
 
-  const baseURL = "/search";
-  
-    axios.get(baseURL,{
-      params:{ code:params}
-    }).then((response) => {
-     console.log(response.data)
-    }).catch(err => {
-        if (err.response && err.response.status === 406){
-            // console.clear()
-        }
-      })
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const accessToken = urlParams.get('access_token');
+    const refreshToken = urlParams.get('refresh_token');
+
+    console.log('access_token:'+ accessToken);
+    console.log('refresh_token:'+ refreshToken);
+
+    if (refreshToken) {
+      fetch(`/refresh_token?refresh_token=${refreshToken}`)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.error(err));
+    }
+
 }, []);
 
   return (
@@ -66,3 +68,6 @@ const styles = {
   },
     
 }
+
+
+
