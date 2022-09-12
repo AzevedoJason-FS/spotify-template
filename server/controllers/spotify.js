@@ -1,5 +1,5 @@
 const express = require('express');
-const querystring = require('querystring');
+const querystring = require('node:querystring');
 const spotify = express.Router();
 const randomstring = require("randomstring");
 require('dotenv').config();
@@ -12,8 +12,8 @@ const login = async (req, res) => {
 };
 
 const callback = async (req, res) => {
-
   const code = req.query.code || null;
+
   axios({
     method: 'post',
     url: 'https://accounts.spotify.com/api/token',
@@ -28,17 +28,42 @@ const callback = async (req, res) => {
     },
   })
   .then(response => {
-    if (response.status === 200) {
-      res.send(`<pre>${JSON.stringify(response.data, null, 2)}</pre>`);
-    } else {
-      res.send(response);
+    if (response.status === 200){
+      const { access_token, refresh_token } = response.data;
+      const queryParams = querystring.stringify({
+          access_token,
+          refresh_token,
+      });
+      res.redirect(`http://localhost:3000/search?${queryParams}`);
+    }else{
+      res.redirect(`/?${querystring.stringify({ error: 'invalid_token' })}`)
     }
   })
-  .catch(error => {
-    res.send(error);
-  });
-  }
+}
+
+const refreshToken = async (req, res) => {
+  const { refresh_token } = req.query;
+
+  axios({
+    method: 'post',
+    url: 'https://accounts.spotify.com/api/token',
+    data: querystring.stringify({
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    }),
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+    },
+  })
+    .then(response => {
+      res.send(response.data);
+    })
+    .catch(error => {
+      res.send(error);
+    });
+};
 
 module.exports = {
- login, callback
+ login, callback, refreshToken
 }
