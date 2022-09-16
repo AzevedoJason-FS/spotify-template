@@ -4,7 +4,7 @@ const spotifyTokenSchema = mongoose.Schema({
     access_token: {
         type: String,
     },
-    token_type:{
+    refresh_token:{
         type: String
     },
     expires_in:{
