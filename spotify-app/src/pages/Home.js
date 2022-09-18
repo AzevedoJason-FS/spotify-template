@@ -1,7 +1,30 @@
 import Header from '../components/Header';
 import * as React from "react";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
+  const baseURL = "/token";
+  let navigate = useNavigate();
+
+
+  React.useEffect(() => {
+
+    axios.get(baseURL)
+    .then((response) => {
+      if ( response.data.valid === false ){ 
+        return navigate("/");
+      }else { 
+        return navigate("/search");
+      }
+    })
+    .catch(err => {
+          console.log(err)
+    })
+
+
+}, [navigate]);
     
   return (
     <div>

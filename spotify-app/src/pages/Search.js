@@ -1,30 +1,34 @@
 import Header from '../components/Header';
 import * as React from "react";
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+
+const Search = () => {
+
+  const baseURL = "/token";
+  let navigate = useNavigate();
+
 
   React.useEffect(() => {
 
-    // const queryString = window.location.search;
-    // const urlParams = new URLSearchParams(queryString);
-    // const accessToken = urlParams.get('access_token');
-    // const refreshToken = urlParams.get('refresh_token');
+    axios.get(baseURL)
+    .then((response) => {
+      console.log(response.data)
+      if ( response.data.valid === false ){ 
+        console.log('Token NOT valid')
+        return navigate("/");
+      }else { 
+        console.log('Token valid')
+        return navigate("/search");
+      }
+    })
+    .catch(err => {
+          console.log(err)
+    })
 
-    // console.log('access_token:'+ accessToken);
-    // console.log('refresh_token:'+ refreshToken);
 
-    // if (refreshToken) {
-    //   fetch(`/refresh_token?refresh_token=${refreshToken}`)
-    //     .then(res => res.json())
-    //     .then(data => console.log(data))
-    //     .catch(err => console.error(err));
-    // }
-
-
-
-}, []);
+}, [navigate]);
 
   return (
     <div>
@@ -39,7 +43,7 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default Search;
 
 const styles = {
   app: {
