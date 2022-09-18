@@ -13,90 +13,80 @@ const login = async (req, res) => {
 const callback = async (req, res) => {
   const code = req.query.code || null;
 
-  axios({
-    method: 'post',
-    url: 'https://accounts.spotify.com/api/token',
-    data: querystring.stringify({
-      grant_type: 'authorization_code',
-      code: code,
-      redirect_uri: process.env.REDIRECT_URI
-    }),
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
-    },
-  })
-  .then(response => {
-    if (response.status === 200){
-
-      //Store tokens in DB
-      const newToken = new spotifyToken({
-        access_token: response.data.access_token,
-        refresh_token: response.data.refresh_token,
-        expires_in: now + response.data.expires_in,
-      });
-    
-      spotifyToken.find()
-      .then(result => {
-        if(result.length == 0){
-          newToken.save()
-          .then(result => {
-              console.log(result);
-              res.redirect(`http://localhost:3000/search`);
-          })
-        }else{
-          //update the document already in the DB
-          const filter = { _id: '6323e5d9ac4dc8c8e05c0f65' };
-          const update = { access_token: response.data.access_token,
-                           refresh_token: response.data.refresh_token,
-                           expires_in: now + response.data.expires_in 
-                          };
-          
-          spotifyToken.findOneAndUpdate(filter, update, {upsert: true})
+  spotifyToken.findOne()
+  .then(token => {
+  if(token && now < token.expires_in){
+    res.redirect(`http://localhost:3000/search`);
+  }
+  if(!token && code){
+    axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      data: querystring.stringify({
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: process.env.REDIRECT_URI
+      }),
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+      },
+    })
+    .then(response => {
+        //Store tokens in DB
+        const newToken = new spotifyToken({
+          access_token: response.data.access_token,
+          refresh_token: response.data.refresh_token,
+          expires_in: now + response.data.expires_in,
+        });
+  
+        newToken.save()
+        .then(save => {
           res.redirect(`http://localhost:3000/search`);
-        }
+        })
+    })
+  }
+  if(token && now > token.expires_in){
+    axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      data: querystring.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: token.refresh_token
+      }),
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
+      },
+    })
+    .then(response => {
+        //update the document already in the DB
+        const filter = { _id: token._id };
+        const update = { access_token: response.data.access_token,
+                         expires_in: now + response.data.expires_in 
+                       };
+        spotifyToken.findOneAndUpdate(filter, update, {upsert: true},( error, result) => {
+           res.redirect(`http://localhost:3000/search`);
+        })
+    })
+    .catch(err => {
+      console.error(err.message);
+      res.status(500).json({
+          error: {
+              message: err.message
+          }
       })
-    }else{
-      res.redirect(`/?${querystring.stringify({ error: 'invalid_token' })}`)
-    }
-  })
+    });
+  }
+ })
 }
 
-// const status = async (req, res) => {
-//   req.token = await spotifyToken.findOne({ where: {} })
-//   if (!accessToken || !timestamp) {
-//     return false;
-//   }
-//   const millisecondsElapsed = Date.now() - Number(timestamp);
-//   return (millisecondsElapsed / 1000) > Number(expireTime);
-// };
-
-
-
-// const refreshToken = async (req, res) => {
-//   const { refresh_token } = req.query;
-// BQCOcB0IgwI69jmHv-PrepVAjd3TmktlWVIfgtXies1x1C9rPOZ8caOMdJCFXG9L5vbkV1
-
-//   axios({
-//     method: 'post',
-//     url: 'https://accounts.spotify.com/api/token',
-//     data: querystring.stringify({
-//       grant_type: 'refresh_token',
-//       refresh_token: refresh_token
-//     }),
-//     headers: {
-//       'content-type': 'application/x-www-form-urlencoded',
-//       Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
-//     },
-//   })
-//     .then(response => {
-//       res.send(response.data);
-//     })
-//     .catch(error => {
-//       res.send(error);
-//     });
-// };
+const status = async (req, res) => {
+  req.token = await spotifyToken.findOne()
+  const valid = (req.token.expires_in > now) ? true : false
+  res.json({ valid })
+};
 
 module.exports = {
- login, callback,
+ login, callback, status
 }

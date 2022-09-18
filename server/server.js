@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use("/login", spotifyCtrl.login);
 app.use("/callback", spotifyCtrl.callback);
-// app.use('/token', spotifyCtrl.jwt, spotifyCtrl.status)
+app.use('/token', spotifyCtrl.status)
 
 //middleware to handle CORS Policy
 app.use((req, res, next) => {
