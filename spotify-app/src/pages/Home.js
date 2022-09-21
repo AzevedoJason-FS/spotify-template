@@ -13,9 +13,9 @@ const Home = () => {
 
     axios.get(baseURL)
     .then((response) => {
-      if ( response.data.valid === false ){ 
+      if ( !response || response == null || response && response.data.valid === false ){ 
         return navigate("/");
-      }else { 
+      }else if(response && response.data.valid === true) { 
         return navigate("/search");
       }
     })

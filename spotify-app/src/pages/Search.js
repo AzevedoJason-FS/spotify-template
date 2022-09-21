@@ -9,7 +9,6 @@ const Search = () => {
   const baseURL = "/token";
   let navigate = useNavigate();
 
-
   React.useEffect(() => {
 
     axios.get(baseURL)
@@ -27,8 +26,16 @@ const Search = () => {
           console.log(err)
     })
 
+    axios.get('/search')
+    .then((response) => {
+      console.log(response)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
 }, [navigate]);
+
 
   return (
     <div>
