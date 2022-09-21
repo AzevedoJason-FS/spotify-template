@@ -13,7 +13,7 @@ const login = async (req, res) => {
 const callback = async (req, res) => {
   const code = req.query.code || null;
 
-  spotifyToken.findOne()
+  await spotifyToken.findOne()
   .then(token => {
   if(token && now < token.expires_in){
     res.redirect(`http://localhost:3000/search`);
@@ -82,11 +82,40 @@ const callback = async (req, res) => {
 }
 
 const status = async (req, res) => {
-  req.token = await spotifyToken.findOne()
-  const valid = (req.token.expires_in > now) ? true : false
+  await spotifyToken.findOne()
+  .then(token => {
+    if(token){
+      const valid = (token.expires_in > now) ? true : false
   res.json({ valid })
+    }
+    else if(!token){
+      res.json('There are no tokens in the database')
+    }
+  })
 };
 
+const get = async (req,res) => {
+  await spotifyToken.findOne()
+  .then(token => {
+  axios.get(
+    'https://api.spotify.com/v1/tracks/11dFghVXANMlKmJXsNCbNl', {
+        headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + token.access_token,
+            'Content-Type': 'application/json',
+        },
+    })
+  .then((response) => {
+    res.send(response.data)
+  })
+  .catch(err => {
+    res.send(err)
+  })
+  })
+}
+
+
+
 module.exports = {
- login, callback, status
+ login, callback, status, get
 }
