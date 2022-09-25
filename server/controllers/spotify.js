@@ -86,19 +86,62 @@ const status = async (req, res) => {
   .then(token => {
     if(token){
       const valid = (token.expires_in > now) ? true : false
-  res.json({ valid })
+      res.json({ valid })
     }
     else if(!token){
-      res.json('There are no tokens in the database')
+      res.json(false)
     }
   })
 };
 
-const get = async (req,res) => {
+const topTracks = async (req,res) => {
+  const id = req.params.id
   await spotifyToken.findOne()
   .then(token => {
   axios.get(
-    'https://api.spotify.com/v1/tracks/11dFghVXANMlKmJXsNCbNl', {
+    `https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + token.access_token,
+            'Content-Type': 'application/json',
+        },
+    })
+  .then((response) => {
+    res.send(response.data)
+  })
+  .catch(err => {
+    res.send(err)
+  })
+  })
+}
+
+const artist = async (req,res) => {
+  const id = req.params.id
+  await spotifyToken.findOne()
+  .then(token => {
+  axios.get(
+    `https://api.spotify.com/v1/artists/${id}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + token.access_token,
+            'Content-Type': 'application/json',
+        },
+    })
+  .then((response) => {
+    res.send(response.data)
+  })
+  .catch(err => {
+    res.send(err)
+  })
+  })
+}
+
+const album = async (req,res) => {
+  const id = req.params.id
+  await spotifyToken.findOne()
+  .then(token => {
+  axios.get(
+    `https://api.spotify.com/v1/albums/${id}/tracks?market=US&limit=10`, {
         headers: {
             Accept: 'application/json',
             Authorization: 'Bearer ' + token.access_token,
@@ -115,7 +158,6 @@ const get = async (req,res) => {
 }
 
 
-
 module.exports = {
- login, callback, status, get
+ login, callback, status, topTracks, artist, album
 }
