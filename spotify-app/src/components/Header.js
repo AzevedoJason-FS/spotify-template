@@ -1,7 +1,9 @@
+import { FaSpotify } from "react-icons/fa";
+
 const Header = ( ) => {
     return(
         <header style={styles.header}>
-            <h2 style={styles.title}>Spotify</h2>
+            <FaSpotify style={styles.icon}/>
         </header>
     )
 }
@@ -16,12 +18,19 @@ const styles = {
         zIndex: '1', 
         top: '0', 
         left: '0',
-        backgroundColor: '#111', 
+        background: 'linear-gradient(to top, #38ef7d, #11998e)', /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         overflowX: 'hidden',
         paddingTop: '20px',
+        display: 'flex',
+        justifyContent: 'center'
     },
 
     title: {
         color: 'white'
+    },
+
+    icon: {
+        color: 'white',
+        fontSize: '80px'
     }
 }
