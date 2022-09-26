@@ -19,7 +19,9 @@ const Home = () => {
       }
     })
     .catch(err => {
-          console.log(err)
+      if (err.response && err.response.status === 500){
+        console.clear()
+    }
     })
 
 

@@ -6,74 +6,90 @@ import { useNavigate } from "react-router-dom";
 
 const Search = () => {
 
-  const [track, setTrack] = React.useState(null);
-  const [artist, setArtist] = React.useState(null);
-  const [album, setAlbum] = React.useState(null);
+  const [track, setTrack] = React.useState('');
+  const [artist, setArtist] = React.useState('');
+  const [album, setAlbum] = React.useState('');
+  const [token, setToken] = React.useState('');
 
   const baseURL = "/token";
   let navigate = useNavigate();
 
   React.useEffect(() => {
-    axios.get(baseURL)
-    .then((response) => {
-      if ( response.data.valid === true ){ 
-        return navigate("/search");
-      }else{ 
-        return navigate("/");
-      }
-    })
-    .catch(err => {
-          console.log(err)
-    })
+   getArtist();
+   getTopTrack();
+   getAlbum();
 
-    axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
-    .then((response) => {
-      setTrack(response.data.tracks)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+   axios.get(baseURL)
+   .then((response) => {
+     if ( response.data.valid === true ){ 
+       const token = response.data.valid
+       setToken(token)
+       return navigate("/search");
+     }else{ 
+       return navigate("/");
+     }
+   })
+   .catch(err => {
+         console.log(err)
+   })
+  }, [navigate]);
 
-    axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
-    .then((response) => {
-      setArtist(response.data)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+const getTopTrack = () => {
+  axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
+  .then((response) => {
+    const data = response.data.tracks
+    setTrack(data)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
-    axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
-    .then((response) => {
-      setAlbum(response.data.items)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+const getArtist = () => {
+  axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
+  .then((response) => {
+    const data = response.data
+    setArtist(data)
 
-}, [navigate]);
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
-if (!track) return null;
+const getAlbum = () => {
+  axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
+  .then((response) => {
+    const data = response.data.items
+    setAlbum(data)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
   return (
     <div>
       <Header />
     <div className="App" style={styles.app}>
-      <div style={{
-        backgroundImage: `url('${artist.images[0].url}')`,
-        width: '100%',
-        objectFit: 'cover',
-        backgroundSize: 'cover',
-        height: '20rem',
-        backgroundPosition: '25% 20%'
-      }}>
-        <h2 style={styles.title}>{artist.name}</h2>
-        {
-          artist.popularity > 80 ?
-            (<h4 style={styles.subTitle}>Popular Artist</h4>) 
-            :
-            (<h4 style={styles.subTitle}>{artist.popularity}</h4>) 
-        }
-      </div>
+
+    <div style={{
+      // backgroundImage: `url('${artist.images[0].url}')`,
+      width: '100%',
+      objectFit: 'cover',
+      backgroundSize: 'cover',
+      height: '20rem',
+      backgroundPosition: '25% 20%'
+    }}>
+      <h2 style={styles.title}>{artist.name}</h2>
+      {
+        artist.popularity > 80 ?
+          (<h4 style={styles.subTitle}>Popular Artist</h4>) 
+          :
+          (<h4 style={styles.subTitle}>{artist.popularity}</h4>) 
+      }
+    </div>
+
       <div style={styles.main}>
         <div>
           <h2 style={styles.gridTitle}>TOP TRACKS</h2>
@@ -102,7 +118,6 @@ if (!track) return null;
                         return (
                           <div key={album.id} style={styles.track}>
                             <h2 style={styles.trackName}><a href={album.external_urls.spotify}>{album.name}</a></h2>
-                            {/* <img src={track.album.images[2].url} alt={track.name} /> */}
                             </div>
                         )
                     })
@@ -133,14 +148,14 @@ const styles = {
   title: {
     fontSize: '6rem',
     padding: '20px',
-    color: 'white',
+    color: 'black',
     marginTop: '1rem'
   },
 
   subTitle: {
     fontSize: '1.5rem',
     padding: '20px',
-    color: 'white',
+    color: 'black',
     marginTop: '1rem'
   },
 
