@@ -17,6 +17,7 @@ app.use('/token', spotifyCtrl.status)
 app.use('/artist-top-tracks/:id', spotifyCtrl.topTracks);
 app.use('/artist/:id', spotifyCtrl.artist);
 app.use('/album/:id', spotifyCtrl.album);
+
 //middleware to handle CORS Policy
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");

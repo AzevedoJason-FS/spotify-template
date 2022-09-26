@@ -89,7 +89,7 @@ const status = async (req, res) => {
       res.json({ valid })
     }
     else if(!token){
-      res.json(false)
+      res.redirect(`http://localhost:3000/`);
     }
   })
 };
@@ -98,20 +98,24 @@ const topTracks = async (req,res) => {
   const id = req.params.id
   await spotifyToken.findOne()
   .then(token => {
-  axios.get(
-    `https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`, {
-        headers: {
-            Accept: 'application/json',
-            Authorization: 'Bearer ' + token.access_token,
-            'Content-Type': 'application/json',
-        },
-    })
+    if(token){
+      axios.get(
+        `https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`, {
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Bearer ' + token.access_token,
+                'Content-Type': 'application/json',
+            },
+        })
   .then((response) => {
     res.send(response.data)
   })
   .catch(err => {
     res.send(err)
   })
+  }else if(!token){
+    res.redirect(`http://localhost:3000/`);
+  }
   })
 }
 
@@ -119,6 +123,7 @@ const artist = async (req,res) => {
   const id = req.params.id
   await spotifyToken.findOne()
   .then(token => {
+    if(token){
   axios.get(
     `https://api.spotify.com/v1/artists/${id}`, {
         headers: {
@@ -133,6 +138,9 @@ const artist = async (req,res) => {
   .catch(err => {
     res.send(err)
   })
+}else if(!token){
+  res.redirect(`http://localhost:3000/`);
+}
   })
 }
 
@@ -140,6 +148,7 @@ const album = async (req,res) => {
   const id = req.params.id
   await spotifyToken.findOne()
   .then(token => {
+    if(token){
   axios.get(
     `https://api.spotify.com/v1/albums/${id}/tracks?market=US&limit=10`, {
         headers: {
@@ -154,6 +163,9 @@ const album = async (req,res) => {
   .catch(err => {
     res.send(err)
   })
+}else if(!token){
+  res.redirect(`http://localhost:3000/`);
+}
   })
 }
 
