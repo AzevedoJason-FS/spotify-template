@@ -15,27 +15,29 @@ const Search = () => {
   let navigate = useNavigate();
 
   React.useEffect(() => {
+
+    axios.get(baseURL)
+    .then((response) => {
+      if ( response.data.valid === true ){ 
+        const token = response.data.valid
+        setToken(token)
+        return navigate("/search");
+      }else{ 
+        return navigate("/");
+      }
+    })
+    .catch(err => {
+          console.log(err)
+    })
+
    getArtist();
    getTopTrack();
    getAlbum();
 
-   axios.get(baseURL)
-   .then((response) => {
-     if ( response.data.valid === true ){ 
-       const token = response.data.valid
-       setToken(token)
-       return navigate("/search");
-     }else{ 
-       return navigate("/");
-     }
-   })
-   .catch(err => {
-         console.log(err)
-   })
   }, [navigate]);
 
-const getTopTrack = () => {
-  axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
+const getTopTrack = async () => {
+  await axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
   .then((response) => {
     const data = response.data.tracks
     setTrack(data)
@@ -45,8 +47,8 @@ const getTopTrack = () => {
   })
 }
 
-const getArtist = () => {
-  axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
+const getArtist = async () => {
+  await axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
   .then((response) => {
     const data = response.data
     setArtist(data)
@@ -57,8 +59,8 @@ const getArtist = () => {
   })
 }
 
-const getAlbum = () => {
-  axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
+const getAlbum = async () => {
+  await axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
   .then((response) => {
     const data = response.data.items
     setAlbum(data)
@@ -74,7 +76,7 @@ const getAlbum = () => {
     <div className="App" style={styles.app}>
 
     <div style={{
-      // backgroundImage: `url('${artist.images[0].url}')`,
+      backgroundImage: `url('${artist && artist.images[0].url}')`,
       width: '100%',
       objectFit: 'cover',
       backgroundSize: 'cover',
@@ -148,14 +150,14 @@ const styles = {
   title: {
     fontSize: '6rem',
     padding: '20px',
-    color: 'black',
+    color: 'white',
     marginTop: '1rem'
   },
 
   subTitle: {
     fontSize: '1.5rem',
     padding: '20px',
-    color: 'black',
+    color: 'white',
     marginTop: '1rem'
   },
 
