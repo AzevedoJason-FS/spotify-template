@@ -10,10 +10,10 @@ const login = async (req, res) => {
   res.redirect(`${process.env.AUTH_ENDPOINT}?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=${process.env.RESPONSE_TYPE}&scope=${scope}`)
 };
 
-const callback = async (req, res) => {
+const callback = (req, res) => {
   const code = req.query.code || null;
 
-  await spotifyToken.findOne()
+  spotifyToken.findOne()
   .then(token => {
   if(token && now < token.expires_in){
     res.redirect(`http://localhost:3000/search`);
@@ -81,8 +81,8 @@ const callback = async (req, res) => {
  })
 }
 
-const status = async (req, res) => {
-  await spotifyToken.findOne()
+const status = (req, res) => {
+  spotifyToken.findOne()
   .then(token => {
     if(token){
       const valid = (token.expires_in > now) ? true : false
@@ -94,9 +94,9 @@ const status = async (req, res) => {
   })
 };
 
-const topTracks = async (req,res) => {
+const topTracks = (req,res) => {
   const id = req.params.id
-  await spotifyToken.findOne()
+  spotifyToken.findOne()
   .then(token => {
     if(token){
       axios.get(
@@ -119,9 +119,9 @@ const topTracks = async (req,res) => {
   })
 }
 
-const artist = async (req,res) => {
+const artist = (req,res) => {
   const id = req.params.id
-  await spotifyToken.findOne()
+  spotifyToken.findOne()
   .then(token => {
     if(token){
   axios.get(
@@ -144,9 +144,9 @@ const artist = async (req,res) => {
   })
 }
 
-const album = async (req,res) => {
+const album = (req,res) => {
   const id = req.params.id
-  await spotifyToken.findOne()
+  spotifyToken.findOne()
   .then(token => {
     if(token){
   axios.get(
