@@ -36,8 +36,8 @@ const Search = () => {
 
   }, [navigate]);
 
-const getTopTrack = async () => {
-  await axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
+const getTopTrack = () => {
+  axios.get('/artist-top-tracks/7dGJo4pcD2V6oG8kP0tJRR')
   .then((response) => {
     const data = response.data.tracks
     setTrack(data)
@@ -47,8 +47,8 @@ const getTopTrack = async () => {
   })
 }
 
-const getArtist = async () => {
-  await axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
+const getArtist = () => {
+  axios.get('/artist/7dGJo4pcD2V6oG8kP0tJRR')
   .then((response) => {
     const data = response.data
     setArtist(data)
@@ -59,8 +59,8 @@ const getArtist = async () => {
   })
 }
 
-const getAlbum = async () => {
-  await axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
+const getAlbum = () => {
+  axios.get('/album/2cWBwpqMsDJC1ZUwz813lo')
   .then((response) => {
     const data = response.data.items
     setAlbum(data)
